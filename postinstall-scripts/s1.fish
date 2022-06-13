@@ -67,14 +67,22 @@ chsh -s /bin/fish $user
 # Finishing up & cleaning
 #-----------------------------------------------------------------------------------------------
 
-echo "All done! Do you want to reboot now? [Type y/n]"
-read reboot_question
-if ["$reboot_question"="y"]
-    echo "Rebooting in 10 seconds"
-    sleep 10
-    reboot
-else if ["$reboot_question"="n"]
-    echo "Not rebooting. Goody bye :>"
-else
-    echo "Please type y/n. Do you want to reboot?"
+function rebooting
+
+    echo "All done! Do you want to reboot now? [Type y/n]"
+    read reboot_question
+
+    switch $reboot_question
+        case 'y'
+            echo "Rebooting in 10 Seconds! See you after the jump :>"
+            sleep 10
+            reboot now
+        case 'n'
+            echo "Not rebooting. Living dangerously I see. Good bye :>"
+        case '*'
+            echo "Please type y/n. Do you want to reboot?"
+            rebooting
+    end
 end
+
+rebooting
