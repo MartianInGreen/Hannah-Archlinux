@@ -16,3 +16,8 @@ This is for setting up a completely new system.
     - Wait for Arch to finish installing
 - Git clone this repo
 - Run the run-this.sh script
+
+### Suggestions / Reminders
+
+- Increase the ammount of parelell downloads in pacman.conf
+- Set color to true in pacman.conf
