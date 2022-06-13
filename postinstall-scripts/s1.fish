@@ -1,7 +1,6 @@
 set init_dir $PWD
-set user $USER
-set packages_init "krita xournalpp neofetch blender man-db libqalculate libreoffice-fresh inkscape gimp darktable rustup python nextcloud-client qalculate-gtk guake alacritty discord gpick code git fish pcmanfm jre-openjdk yakuake "
-set aur_packages_init "brave-bin polymc-bin notion-app-enhanced steam heroic-games-launcher-bin spotify whatsapp-nativefier "
+set packages_init "krita xournalpp neofetch blender man-db libqalculate libreoffice-fresh inkscape gimp darktable rustup python nextcloud-client qalculate-gtk guake alacritty discord gpick code git fish pcmanfm jre-openjdk yakuake"
+set aur_packages_init "brave-bin polymc-bin notion-app-enhanced steam heroic-games-launcher-bin spotify whatsapp-nativefier"
 
 #-----------------------------------------------------------------------------------------------
 # User configuration
@@ -17,11 +16,11 @@ echo "AUR (via yay): $aur_packages_init"
 # Asking user for packages
 echo "Do you want to install more (non AUR) packages? [If not just press enter - Seperate by space]"
 read non_aur_input
-set packages (string join '' $packages_init $non_aur_input)
+set packages (string join '' ' ' $packages_init $non_aur_input)
 
 echo "Do you want to install more (AUR) packages? [If not just press enter - Seperate by space]"
 read aur_input
-set aur_packages (string join '' $aur_packages_init $aur_input)
+set aur_packages (string join '' ' ' $aur_packages_init $aur_input)
 
 #-----------------------------------------------------------------------------------------------
 # Installing Yay
@@ -30,7 +29,7 @@ set aur_packages (string join '' $aur_packages_init $aur_input)
 cd /opt
 sudo git clone https://aur.archlinux.org/yay-git.git 
 
-sudo chown -R $user:$user ./yay-git
+sudo chown -R $USER:$USER ./yay-git
 cd yay-git
 makepkg -si
 
@@ -48,7 +47,7 @@ bash -c "yay -S $aur_packages"
 #-----------------------------------------------------------------------------------------------
 
 # Creating Custom Fish configs
-printf "if status is-interactive\n neofetch\n end"
+printf "if status is-interactive\n neofetch\n end" > /home/$USER/.config/fish/config.fish
 
 alias -s nf="cd && fish"
 alias -s please="sudo"
@@ -61,7 +60,7 @@ alias -s start_qemu="sudo systemctl start libvirtd.service"
 # Changin Shell
 #-----------------------------------------------------------------------------------------------
 
-chsh -s /bin/fish $user
+chsh -s /bin/fish $USER
 
 #-----------------------------------------------------------------------------------------------
 # Finishing up & cleaning
