@@ -1,4 +1,4 @@
-set init_dir pwd
+set init_dir $PWD
 set user $USER
 set packages_init "krita xournalpp neofetch blender man-db libqalculate libreoffice-fresh inkscape gimp darktable rustup python nextcloud-client qalculate-gtk guake alacritty discord gpick code git fish pcmanfm jre-openjdk yakuake "
 set aur_packages_init "brave-bin polymc-bin notion-app-enhanced steam heroic-games-launcher-bin spotify whatsapp-nativefier "
