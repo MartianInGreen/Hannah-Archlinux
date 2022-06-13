@@ -17,11 +17,11 @@ echo "AUR (via yay): $aur_packages_init"
 # Asking user for packages
 echo "Do you want to install more (non AUR) packages? [If not just press enter - Seperate by space]"
 read non_aur_input
-set -a packages $packages_init $non_aur_input
+set packages (string join '' $packages_init $non_aur_input)
 
 echo "Do you want to install more (AUR) packages? [If not just press enter - Seperate by space]"
 read aur_input
-set -a aur_packages $aur_packages_init $aur_input
+set aur_packages (string join '' $aur_packages_init $aur_input)
 
 #-----------------------------------------------------------------------------------------------
 # Installing Yay
@@ -40,8 +40,8 @@ cd $init_dir
 # Installing packages
 #-----------------------------------------------------------------------------------------------
 
-sudo pacman -S $packages
-yay -S $aur_packages
+bash -c "sudo pacman -S $packages"
+bash -c yay -S $aur_packages
 
 #-----------------------------------------------------------------------------------------------
 # Making & copying configs
