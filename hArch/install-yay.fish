@@ -1,0 +1,9 @@
+set init_dir $PWD
+cd /opt
+sudo git clone https://aur.archlinux.org/yay-git.git 
+
+sudo chown -R $USER:$USER ./yay-git
+cd yay-git
+makepkg -si
+
+cd $init_dir

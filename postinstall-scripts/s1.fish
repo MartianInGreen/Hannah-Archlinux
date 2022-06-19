@@ -10,7 +10,7 @@ echo "You're user $USER. The following instalation requieres SUDO priviliges!"
 
 # Telling the user what will be installed!
 echo "The following packages will be installed:"
-echo "non-AUR (via pacman): $packages_init"
+echo "non-AUR (via pacman): $packages_init" 
 echo "AUR (via yay): $aur_packages_init"
 
 # Asking user for packages
