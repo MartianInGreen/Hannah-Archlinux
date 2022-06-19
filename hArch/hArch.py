@@ -13,12 +13,6 @@ import pwd
 import os
 import subprocess
 
-sudo = True
-yay = True
-packages_classes = ['']
-packages_extra = ['']
-packages_list = ['']
-
 def __main__():
     sudo_question()
     yay = yay_question()
@@ -50,6 +44,12 @@ def __main__():
 #-------------------------------------------------------
 
 user = pwd.getpwuid(os.getuid())[0]
+
+sudo = True
+yay = True
+packages_classes = ['']
+packages_extra = ['']
+packages_list = ['']
 
 #-------------------------------------------------------
 # Initial User configuration
