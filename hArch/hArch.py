@@ -13,20 +13,79 @@ import pwd
 import os
 import subprocess
 
-def __main__():
-    sudo_question()
-    yay = yay_question()
-    packages_classes = package_classes()
-    packages_extra = extra_packages()
-    packages_list = list_packages()
+#-------------------------------------------------------
+# Setup & declaring variables
+#-------------------------------------------------------
 
+user = pwd.getpwuid(os.getuid())[0]
+
+sudo = True
+yay = True
+packages_classes = ['']
+packages_extra = ['']
+packages_list = ['']
+packages_all = ['']
+packages_allAUR = ['']
+
+raw_packages = {
+    "non-aur": {
+        "basic": ['man-db', 'neofetch', 'alacritty', 'git', 'fish', 'yakuake', 'libqalculate'],
+        "image": ['krita', 'gimp', 'darktable', 'inkscape'],
+        "3d": ['blender'],
+        "code": ['code', 'python', 'rustup', 'cmake'],
+        "office": ['xournalpp', 'libreoffice-fresh'],
+        "utils": ['nextcloud-client', 'qalculate-gtk'],
+        "video": ['kdenlive'],
+        "gaming": ['']
+    },
+    "aur": {
+        "basic": [''],
+        "image": [''],
+        "3d": [''],
+        "code": [''],
+        "office": ['notion-app-enhanced'],
+        "utils": ['brave-bin'],
+        "video": [''],
+        "gaming": ['polymc-bin', 'steam', 'heroic-games-launcher-bin', 'mangohud']
+    }
+}
+
+#-------------------------------------------------------
+# Main logic
+#-------------------------------------------------------
+
+def __main__(packages_all, packages_allAUR):
+    SudoQuestion()
+    yay = YayQuestion()
+    packages_classes = PackageClasses()
+    packages_extra = ExtraPackages()
+    packages_list = ListPackages()
+
+    # Yay logic
     if yay == True:
-        #install_yay()
-        print("install yay")
+        InstallYay()
     else:
         print(f"{user} chose not to install yay. Skipping yay instalation")
 
-    package_install()
+    # Package logic
+    def PackageLogic():
+
+        raw_nonAUR = raw_packages.get('non-aur')
+        raw_AUR = raw_packages.get('aur')
+
+        print(packages_classes.get(0))
+
+        for x in packages_classes.get(0):
+            packages_all = packages_all + raw_nonAUR.get(x)
+
+        if yay == True:
+            for x in packages_classes.get(0):
+                packages_allAUR = packages_allAUR + raw_AUR.get(x)
+    
+    PackageLogic()
+    PackageInstall(yay, packages_all, packages_allAUR)
+
+    FishAliases()
 
     exit()
 
@@ -40,22 +99,10 @@ def __main__():
 # print(Fore. + "" + Style.RESET_ALL)
 
 #-------------------------------------------------------
-# Setup & declaring variables
-#-------------------------------------------------------
-
-user = pwd.getpwuid(os.getuid())[0]
-
-sudo = True
-yay = True
-packages_classes = ['']
-packages_extra = ['']
-packages_list = ['']
-
-#-------------------------------------------------------
 # Initial User configuration
 #-------------------------------------------------------
 
-def sudo_question():
+def SudoQuestion():
 
     #
     # Sudo?
@@ -76,7 +123,7 @@ def sudo_question():
         print(Fore.GREEN + "Great! Continuing with instalation." + Style.RESET_ALL)
         sudo = True
 
-def yay_question():
+def YayQuestion():
     #
     # Yay?
     #
@@ -101,7 +148,7 @@ def yay_question():
 # Package configuration
 #-------------------------------------------------------
 
-def package_classes():
+def PackageClasses():
     
     #
     # Package classes
@@ -132,7 +179,7 @@ def package_classes():
         print(Fore.LIGHTBLUE_EX + f"{q_packageClasses [i]}" + Style.RESET_ALL)
     return q_packageClasses
 
-def extra_packages():
+def ExtraPackages():
     #
     # Extra packages
     #
@@ -144,14 +191,18 @@ def extra_packages():
             "multiselect": True,
             "choices": [
                 Choice("spotify", enabled=True),
-                Separator()
+                Separator(),
+                Choice("Firefox", enabled=False),
+                Choice("chromium-bin", enabled=False),
+                Separator(),
+                Choice("vlc", enabled=False)
             ]
         }
     ]
     p_extraPackages = prompt(q_extraPackages)
     return q_extraPackages
 
-def list_packages():
+def ListPackages():
     q_listPackages =[
         {
             "type": "input",
@@ -165,16 +216,60 @@ def list_packages():
 # Package instalation
 #-------------------------------------------------------
 
-def install_yay():
+def InstallYay(installAUR, pack_nonAUR, pack_AUR):
     print("Installing yay now.")
 
     subprocess.run(["fish", "install-yay.fish"])
 
-def package_install():
-    print("Installing packages now!")
+def PackageInstall():
+    print("Installing packages now!\nBeginning with non AUR packages.")
+    
+    string_pack_nonAUR = ""
+    strin_pack_AUR = ""
+
+    # Seperating packages into strings
+    for x in pack_nonAUR:
+        string_pack_nonAUR = string_pack_nonAUR + x + " " 
+    if installAUR == True:
+        for x in pack_AUR:
+            string_pack_AUR = string_pack_AUR + x  + " " 
+
+    cmd = 'sudo pacman -Syu ' + string_pack_nonAUR 
+    subprocess.run(cmd.split())
+
+    if installAUR == True:
+        cmd = 'yay -S ' + string_pack_AUR
+        subprocess.run(cmd.split())
+
+#-------------------------------------------------------
+# Config modification
+#-------------------------------------------------------
+
+#-------------------------------------------------------
+# Fish aliases
+#-------------------------------------------------------
+
+def FishAliases():
+    cmd = 'fish -c \'alias -s nf="cd && fish"\''
+    subprocess.run(cmd.split())
+
+    cmd = 'fish -c \'alias -s please="sudo"\''
+    subprocess.run(cmd.split())
+
+    cmd = 'fish -c \'alias -s q="qalc"\''
+    subprocess.run(cmd.split())
+
+    cmd = 'fish -c \'alias -s wa="brave --homepage https://www.wolframalpha.com/"\''
+    subprocess.run(cmd.split())
+
+    cmd = 'fish -c \'alias -s pm="sudo pacman -Syu"\''
+    subprocess.run(cmd.split())
+
+    cmd = 'fish -c \'alias -s start_qemu="sudo systemctl start libvirtd.service"\''
+    subprocess.run(cmd.split())
 
 #-------------------------------------------------------
 # Calling __main__
 #-------------------------------------------------------
 
-__main__()
+__main__(packages_all, packages_allAUR)
