@@ -86,6 +86,8 @@ def __main__(packages_all, packages_allAUR):
     PackageInstall(yay, packages_all, packages_allAUR)
 
     FishAliases()
+    
+    print(Fore.RED + "We're all done! I would suggest rebooting now! See you soon :>")
 
     exit()
 
