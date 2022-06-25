@@ -70,7 +70,7 @@ def mainMenu():
             Choice("install_class", "Install packages by category/class"),
             Choice("install_name", "Install packages by name"),
             Choice("configs", "Configue programs & configs"),
-            Choice("setup", "Create Dev folders... mostly stuff not for you probably"),
+            Choice("setup", "Create Folders & Setting up Git key & etc."),
             Choice("exit", "Exit")
         ]
     }
@@ -319,16 +319,109 @@ def configs():
 #-------------------------------------------------------
 
 def setup():
-    # Create a new directory called 'Dev' in the home directory
-    cmd = 'mkdir ~/Dev'
+    # Make menu to ask if directories should be created
+    create_directories = {
+        "type": "confirm",
+        "name": "create_directories",
+        "message": "Do you want to create directories?",
+    }
+    create_directories = prompt(create_directories)
+    create_directories = create_directories.get("create_directories")
+
+    if create_directories:
+        # Create a new directory called 'Dev' in the home directory
+        cmd = 'mkdir ~/Dev'
+        subprocess.run(cmd.split())
+
+        # Create a new directory called 'Working' in the home directory
+        cmd = 'mkdir ~/Working'
+        subprocess.run(cmd.split())
+
+        # Create a new directory called 'Tools' in the home directory
+        cmd = 'mkdir ~/Tools'
+        subprocess.run(cmd.split())
+
+        # Create a new directory called 'Creative' in the home directory
+        cmd = 'mkdir ~/Creative'
+        subprocess.run(cmd.split())
+    
+    # Make menu to ask if git should be configured
+    configure_git = {
+        "type": "confirm",
+        "name": "configure_git",
+        "message": "Do you want to configure git?",
+    }
+    configure_git = prompt(configure_git)
+    configure_git = configure_git.get("configure_git")
+
+    if configure_git:
+        setupGit()
+    else:
+        print(Fore.RED + "Skipping git configuration..." + Style.RESET_ALL)
+
+def setupGit():
+    print(Fore.RED + "Setting up Git..." + Style.RESET_ALL)
+    
+    # Make menu to ask if ssh key should be created
+    ssh_key = {
+        "type": "confirm",
+        "name": "ssh_key",
+        "message": "Do you want to create a new SSH key?"
+    }
+    ssh_key = prompt(ssh_key)
+    ssh_key = ssh_key.get("ssh_key")
+
+    # Create a new SSH key if the user wants to
+    if ssh_key:
+        cmd = 'ssh-keygen -t rsa -b 4096'
+        subprocess.run(cmd.split())
+    
+    # Get the PGP public key from the SSH key
+    cmd = 'cat ~/.ssh/id_rsa.pub'
+    public_key = subprocess.run(cmd.split(), stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+    # Make menu to ask if the public key should be added to the Github account
+    add_public_key = {
+        "type": "confirm",
+        "name": "add_public_key",
+        "message": "Do you want to add the public key to your Github account?"
+    }
+    add_public_key = prompt(add_public_key)
+    add_public_key = add_public_key.get("add_public_key")
+
+    # Write the public key to the file 'ssh_key' in the home directory
+    if add_public_key:
+        cmd = 'echo ' + public_key + ' >> ~/.ssh/ssh_key'
+        subprocess.run(cmd.split())
+    
+    # Make menu to ask if GPG key should be created
+    gpg_key = {
+        "type": "confirm",
+        "name": "gpg_key",
+        "message": "Do you want to create a new GPG key?"
+    }
+    gpg_key = prompt(gpg_key)
+    gpg_key = gpg_key.get("gpg_key")
+
+    # Create a new GPG key if the user wants to
+    if gpg_key:
+        cmd = 'gpg --default-new-key-algo rsa4096 --gen-key'
+        subprocess.run(cmd.split())
+    
+    # Get the GPG public key from the GPG key
+    cmd = 'cat ~/.gnupg/pubring.gpg | grep "^pub" | cut -d " " -f 2'
+    public_key = subprocess.run(cmd.split(), stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+    # Write the public key to the file 'gpg_key' in the home directory
+    cmd = 'echo ' + public_key + ' >> ~/.ssh/gpg_key'
     subprocess.run(cmd.split())
 
-    # Create a new directory called 'Working' in the home directory
-    cmd = 'mkdir ~/Working'
+    # Add gpg_key to the git config file
+    cmd = 'git config --global user.signingkey ' + public_key
     subprocess.run(cmd.split())
 
-    # Create a new directory called 'Tools' in the home directory
-    cmd = 'mkdir ~/Tools'
+    # Set gpgsign to true in the git config file
+    cmd = 'git config --global commit.gpgsign true'
     subprocess.run(cmd.split())
 
 #-------------------------------------------------------
