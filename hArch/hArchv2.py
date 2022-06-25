@@ -362,6 +362,56 @@ def setup():
 def setupGit():
     print(Fore.RED + "Setting up Git..." + Style.RESET_ALL)
     
+    def sshKey():
+        # Make menu to ask if ssh key should be created
+        create_ssh_key = {
+            "type": "confirm",
+            "name": "create_ssh_key",
+            "message": "Do you want to create an ssh key?",
+        }
+        create_ssh_key = prompt(create_ssh_key)
+        create_ssh_key = create_ssh_key.get("create_ssh_key")
+
+        if create_ssh_key:
+            # Create an ssh key
+            cmd = 'ssh-keygen -t rsa -b 4096'
+            subprocess.run(cmd.split())
+
+        # Get the ssh key
+        cmd = 'cat ~/.ssh/id_rsa.pub'
+        ssh_key = subprocess.run(cmd.split(), stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+        # Write ssh_key to a file in the home directory with the name 'ssh_key.txt'
+        ssh_key_file = open('ssh_key.txt', 'w')
+        ssh_key_file.write(ssh_key)
+        ssh_key_file.close()
+    sshKey()
+
+    def gpgKey():
+        # Make menu to ask if gpg key should be created
+        create_gpg_key = {
+            "type": "confirm",
+            "name": "create_gpg_key",
+            "message": "Do you want to create a gpg key?",
+        }
+        create_gpg_key = prompt(create_gpg_key)
+        create_gpg_key = create_gpg_key.get("create_gpg_key")
+
+        if create_gpg_key:
+            # Create a gpg key
+            cmd = 'gpg --default-new-key-algo rsa4096 --gen-key'
+            subprocess.run(cmd.split())
+
+        # Get the gpg key
+        cmd = 'cat ~/.gnupg/pubring.gpg'
+        gpg_key = subprocess.run(cmd.split(), stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+        # Write gpg_key to a file in the home directory with the name 'gpg_key.txt'
+        gpg_key_file = open('gpg_key.txt', 'w')
+        gpg_key_file.write(gpg_key)
+        gpg_key_file.close()
+
+
     # Make menu to ask if ssh key should be created
     ssh_key = {
         "type": "confirm",
