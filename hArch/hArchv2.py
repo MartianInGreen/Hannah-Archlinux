@@ -406,73 +406,19 @@ def setupGit():
         cmd = 'cat ~/.gnupg/pubring.gpg'
         gpg_key = subprocess.run(cmd.split(), stdout=subprocess.PIPE).stdout.decode('utf-8')
 
+        # get the public key from the gpg key
+        gpg_key = gpg_key.split('\n')
+        gpg_key = gpg_key[1]
+
         # Write gpg_key to a file in the home directory with the name 'gpg_key.txt'
         gpg_key_file = open('gpg_key.txt', 'w')
         gpg_key_file.write(gpg_key)
         gpg_key_file.close()
+    gpgKey()
 
+    print(Fore.YELLOW + "Please remember to mannually add the keys to your GitHub account!" + Style.RESET_ALL)
+    print(Fore.GREEN + "Git setup complete!" + Style.RESET_ALL)
 
-    # Make menu to ask if ssh key should be created
-    ssh_key = {
-        "type": "confirm",
-        "name": "ssh_key",
-        "message": "Do you want to create a new SSH key?"
-    }
-    ssh_key = prompt(ssh_key)
-    ssh_key = ssh_key.get("ssh_key")
-
-    # Create a new SSH key if the user wants to
-    if ssh_key:
-        cmd = 'ssh-keygen -t rsa -b 4096'
-        subprocess.run(cmd.split())
-    
-    # Get the PGP public key from the SSH key
-    cmd = 'cat ~/.ssh/id_rsa.pub'
-    public_key = subprocess.run(cmd.split(), stdout=subprocess.PIPE).stdout.decode('utf-8')
-
-    # Make menu to ask if the public key should be added to the Github account
-    add_public_key = {
-        "type": "confirm",
-        "name": "add_public_key",
-        "message": "Do you want to add the public key to your Github account?"
-    }
-    add_public_key = prompt(add_public_key)
-    add_public_key = add_public_key.get("add_public_key")
-
-    # Write the public key to the file 'ssh_key' in the home directory
-    if add_public_key:
-        cmd = 'echo ' + public_key + ' >> ~/.ssh/ssh_key'
-        subprocess.run(cmd.split())
-    
-    # Make menu to ask if GPG key should be created
-    gpg_key = {
-        "type": "confirm",
-        "name": "gpg_key",
-        "message": "Do you want to create a new GPG key?"
-    }
-    gpg_key = prompt(gpg_key)
-    gpg_key = gpg_key.get("gpg_key")
-
-    # Create a new GPG key if the user wants to
-    if gpg_key:
-        cmd = 'gpg --default-new-key-algo rsa4096 --gen-key'
-        subprocess.run(cmd.split())
-    
-    # Get the GPG public key from the GPG key
-    cmd = 'cat ~/.gnupg/pubring.gpg | grep "^pub" | cut -d " " -f 2'
-    public_key = subprocess.run(cmd.split(), stdout=subprocess.PIPE).stdout.decode('utf-8')
-
-    # Write the public key to the file 'gpg_key' in the home directory
-    cmd = 'echo ' + public_key + ' >> ~/.ssh/gpg_key'
-    subprocess.run(cmd.split())
-
-    # Add gpg_key to the git config file
-    cmd = 'git config --global user.signingkey ' + public_key
-    subprocess.run(cmd.split())
-
-    # Set gpgsign to true in the git config file
-    cmd = 'git config --global commit.gpgsign true'
-    subprocess.run(cmd.split())
 
 #-------------------------------------------------------
 # exectue Main logic
