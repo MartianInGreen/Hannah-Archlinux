@@ -416,6 +416,19 @@ def setupGit():
         gpg_key_file.close()
     gpgKey()
 
+    def gitConfig():
+        # Get the gpg key
+        cmd = 'cat ~/.gnupg/pubring.gpg'
+        gpg_key = subprocess.run(cmd.split(), stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+        # Add gpg_key to the git config file
+        cmd = 'git config --global user.signingkey ' + gpg_key
+        subprocess.run(cmd.split())
+
+        # Set gpgsign to true in the git config file
+        cmd = 'git config --global commit.gpgsign true'
+        subprocess.run(cmd.split())
+
     print(Fore.YELLOW + "Please remember to mannually add the keys to your GitHub account!" + Style.RESET_ALL)
     print(Fore.GREEN + "Git setup complete!" + Style.RESET_ALL)
 
