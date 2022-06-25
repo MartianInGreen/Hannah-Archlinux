@@ -42,7 +42,7 @@ raw_packages = {
         "basic": [''],
         "image": [''],
         "3d": [''],
-        "code": [''],
+        "code": ['ptpython'],
         "office": ['notion-app-enhanced'],
         "utils": ['brave-bin'],
         "video": [''],
@@ -268,6 +268,9 @@ def FishAliases():
     subprocess.run(cmd.split())
 
     cmd = 'fish -c \'alias -s start_qemu="sudo systemctl start libvirtd.service"\''
+    subprocess.run(cmd.split())
+
+    cmd = 'fish -c \'alias -s p="clear && ptpython"\''
     subprocess.run(cmd.split())
 
 #-------------------------------------------------------
