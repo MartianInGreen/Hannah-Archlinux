@@ -20,6 +20,10 @@ Here is a basic guid (Full docs at https://github.com/archlinux/archinstall)
 ```
 git clone https://github.com/MartianInGreen/Hannah-Archlinux
 ```
+or
+```
+git clone git@github.com:MartianInGreen/Hannah-Archlinux.git
+```
 - Run the hArch/run.sh script
 ```
 chmod +x hArch/run.sh script && .hArch/run.sh script
