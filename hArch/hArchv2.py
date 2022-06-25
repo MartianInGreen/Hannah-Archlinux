@@ -44,6 +44,8 @@ def __main__():
         installName()
     elif main_menu == "configs":
         configs()
+    elif main_menu == "setup":
+        setup()
     elif main_menu == "exit":
         goodbye()
 
@@ -68,6 +70,7 @@ def mainMenu():
             Choice("install_class", "Install packages by category/class"),
             Choice("install_name", "Install packages by name"),
             Choice("configs", "Configue programs & configs"),
+            Choice("setup", "Create Dev folders... mostly stuff not for you probably"),
             Choice("exit", "Exit")
         ]
     }
@@ -311,6 +314,22 @@ def configs():
         pacman_config.close()
     pacmanConfig()
 
+#-------------------------------------------------------
+# Secondary logic - setup
+#-------------------------------------------------------
+
+def setup():
+    # Create a new directory called 'Dev' in the home directory
+    cmd = 'mkdir ~/Dev'
+    subprocess.run(cmd.split())
+
+    # Create a new directory called 'Working' in the home directory
+    cmd = 'mkdir ~/Working'
+    subprocess.run(cmd.split())
+
+    # Create a new directory called 'Tools' in the home directory
+    cmd = 'mkdir ~/Tools'
+    subprocess.run(cmd.split())
 
 #-------------------------------------------------------
 # exectue Main logic
