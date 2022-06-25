@@ -1,9 +1,10 @@
 #-------------------------------------------------------
 # ©️ 2022 - Hannah Renners
 # Released under the GNU GENERAL PUBLIC LICENSE Version 3
-# hARch v2.0
+# hArch v2.0
 #-------------------------------------------------------
 
+from time import sleep
 from InquirerPy import prompt
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
@@ -34,6 +35,7 @@ def __main__():
     main_menu = mainMenu()
 
     installYay()
+    configs()
 
     if main_menu == "install_class":
         installClass()
@@ -43,7 +45,7 @@ def __main__():
     elif main_menu == "configs":
         configs()
     elif main_menu == "exit":
-        exit()
+        goodbye()
 
 #-------------------------------------------------------
 # Secondary logic
@@ -53,6 +55,9 @@ def welcome():
     print(Fore.RED + "Welcome to hArch v2.0!")
     print(Fore.GREEN + "Starting execution of the Python program...")
     print(Fore.GREEN + "This program will help you set up your Arch installation." + Style.RESET_ALL)
+    print(Fore.YELLOW + "This program is not affiliated with or endorsed by Arch Linux.")
+    print(Fore.YELLOW + "Please review the source code before using this program!" + Style.RESET_ALL)
+    print(Fore.RED + "This program is not guaranteed to work or be bug free! And is only meant to be used if you know how to do all of this mannually as well!" + Style.RESET_ALL)
 
 def mainMenu():
     # make a main menu with InquirerPy
@@ -79,6 +84,15 @@ def checkForSudo():
         print(Fore.GREEN + "This program was run as sudo. Continuing..." + Style.RESET_ALL)
 
 def installYay():
+    # Print a message that you should know how to manually install AUR packages before installing Yay
+    print(Fore.RED + "You should know how to manually install AUR packages before installing Yay." + Style.RESET_ALL)
+    print(Fore.RED + "If you don't know how to do that, please refer to the Arch wiki and only continue once you know how to do so!" + Style.RESET_ALL)
+    print(Fore.RED + "Always make sure the AUR packages you are installing come from a trusted source or review them yourself before installing them!" + Style.RESET_ALL)
+    print(Fore.RED + "Neither me nor the AUR team can be held responsible for any damage that may occur to your system!" + Style.RESET_ALL)
+
+    # Sleep for 2 seconds
+    sleep(2)
+
     # Make a menu to confirm yay
     yay_menu = {
         "type": "confirm",
@@ -100,7 +114,22 @@ def goodbye():
     print(Fore.GREEN + "All done now! I would recomend you to reboot now." + Style.RESET_ALL)
     print(Fore.GREEN + "Hope to see you after you next installation!" + Style.RESET_ALL)
     print(Fore.RED + "Goodbye!" + Style.RESET_ALL)
-    exit()
+
+    # Make menu to ask if you want to reboot
+    reboot_menu = {
+        "type": "confirm",
+        "message": "Do you want to reboot now?",
+        "name": "reboot"
+    }
+    reboot_menu = prompt(reboot_menu)
+
+    # If reboot is confirmed, reboot
+    if reboot_menu.get("reboot"):
+        cmd = 'reboot'
+        subprocess.run(cmd.split())
+    else:
+        print(Fore.RED + "Exiting..." + Style.RESET_ALL)
+        exit()
 
 #-------------------------------------------------------
 # Secondary logic - install by class
@@ -175,7 +204,17 @@ def installExtra():
                 Choice("Firefox", enabled=False),
                 Choice("chromium-bin", enabled=False),
                 Separator(),
-                Choice("vlc", enabled=False)
+                Choice("vlc", enabled=False),
+                Separator(),
+                Choice("visual-studio-code-bin", enabled=False),
+                Choice("neovim", enabled=False),
+                Choice("emacs", enabled=False),
+                Choice("sublime-text-bin", enabled=False),
+                Choice("atom", enabled=False),
+                Separator(),
+                Choice("python-pip", enabled=False),
+                Choice("python-virtualenv", enabled=False),
+                Choice("python-tk", enabled=False),
             ]
         }
     ]

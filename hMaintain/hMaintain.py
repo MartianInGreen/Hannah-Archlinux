@@ -63,6 +63,8 @@ def welcome():
     print(Fore.GREEN + "It will also help you manage your system.")
     print(Fore.RED)
     print("Use this tool at your own risk. Read the source code before using it.")
+    print(Fore.YELLOW + "This program is not affiliated with or endorsed by Arch Linux.")
+    print(Fore.RED + "This program is not guaranteed to work or be bug free! And is only meant to be used if you know how to do all of this mannually as well!" + Style.RESET_ALL)
     print(Fore.YELLOW)
     print("-------------------------------------------------------")
     print("©️ 2022 - Hannah Renners")
