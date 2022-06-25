@@ -30,10 +30,14 @@ def getWorkingDir():
 
 def __main__():
     welcome()
+    checkForSudo()
     main_menu = mainMenu()
+
+    installYay()
 
     if main_menu == "install_class":
         installClass()
+        installExtra()
     elif main_menu == "install_name":
         installName()
     elif main_menu == "configs":
@@ -66,17 +70,208 @@ def mainMenu():
     out = out[0]
     return out
 
+def checkForSudo():
+    # Check if the python script was run as sudo
+    if os.geteuid() != 0:
+        print(Fore.RED + "This program needs to be run as sudo. Exiting..." + Style.RESET_ALL)
+        exit()
+    else:
+        print(Fore.GREEN + "This program was run as sudo. Continuing..." + Style.RESET_ALL)
+
+def installYay():
+    # Make a menu to confirm yay
+    yay_menu = {
+        "type": "confirm",
+        "message": "Do you want to install yay? You need yay to continue! (yay is a package manager for the AUR)",
+        "name": "yay"
+    }
+    yay_menu = prompt(yay_menu)
+    
+    # If yay is confirmed, install yay
+    if not yay_menu.get("yay"):
+        print(Fore.RED + "You did not confirm yay. Exiting..." + Style.RESET_ALL)
+        exit()
+    
+    print(Fore.RED + "Installing yay..." + Style.RESET_ALL)
+    cmd = 'fish install-yay.fish'
+    subprocess.run(cmd.split())
+
+def goodbye():
+    print(Fore.GREEN + "All done now! I would recomend you to reboot now." + Style.RESET_ALL)
+    print(Fore.GREEN + "Hope to see you after you next installation!" + Style.RESET_ALL)
+    print(Fore.RED + "Goodbye!" + Style.RESET_ALL)
+    exit()
+
 #-------------------------------------------------------
 # Secondary logic - install by class
 #-------------------------------------------------------
+
+def installClass():
+    print(Fore.RED + "Installing packages by class..." + Style.RESET_ALL)
+    
+    package_classes = [
+        {
+            "type": "list",
+            "message": "Please select all package classes you want to install. Navigate with <Up> <Down> and (de-)select with <Space>. Confirm with <Enter>.",
+            "choices": [
+                Choice("basic", name="Basic: Essential utility's and library's", enabled=False),
+                Choice("image", name="Image: Image editing, manipulation, and drawing tools", enabled=False),
+                Choice("3d", name="3D: 3D rendering and creation", enabled=False),
+                Choice("video", name="Video creation & playback software", enabled=False),
+                Choice("code", name="Code: Coding tools and toolchains", enabled=False),
+                Choice("office", name="Office: Office and Notetaking", enabled=False),
+                Choice("utils", name="Util: Various utility software", enabled=False),
+                Choice("gaming", name="Gaming: Launchers & gaming utility's", enabled=False)
+            ],
+            "multiselect": True,
+            "transformer": lambda result: f"\nInstalling the following package classes:"
+        }
+    ]
+    package_classes = prompt(package_classes)
+    package_classes = package_classes.get("package_classes")
+
+    # Same packe list as in hMaintain.py
+    package_list = {
+       "non-aur": {
+            "basic": ['man-db', 'neofetch', 'alacritty', 'git', 'fish', 'yakuake', 'libqalculate'],
+            "image": ['krita', 'gimp', 'darktable', 'inkscape'],
+            "3d": ['blender'],
+            "code": ['code', 'python', 'rustup', 'cmake'],
+            "office": ['xournalpp', 'libreoffice-fresh'],
+            "utils": ['nextcloud-client', 'qalculate-gtk'],
+            "video": ['kdenlive'],
+            "gaming": ['']
+        },
+        "aur": {
+            "basic": [''],
+            "image": [''],
+            "3d": [''],
+            "code": ['ptpython'],
+            "office": ['notion-app-enhanced'],
+            "utils": ['brave-bin'],
+            "video": [''],
+            "gaming": ['polymc-bin', 'steam', 'heroic-games-launcher-bin', 'mangohud']
+        }
+        }
+
+    # Combine the package lists
+    package_list = {**package_list["non-aur"], **package_list["aur"]}
+
+    # Loop through the package classes and install the packages
+    for package_class in package_classes:
+        for package in package_list[package_class]:
+            cmd = 'yay -S ' + package
+            subprocess.run(cmd.split())
+
+def installExtra():
+    extraPackages = [
+        {
+            "type": "list",
+            "message": "Please select all extra packages you want to install. Navigate with <Up> <Down> and (de-)select with <Space>. Confirm with <Enter>.",
+            "multiselect": True,
+            "choices": [
+                Choice("spotify", enabled=True),
+                Separator(),
+                Choice("Firefox", enabled=False),
+                Choice("chromium-bin", enabled=False),
+                Separator(),
+                Choice("vlc", enabled=False)
+            ]
+        }
+    ]
+    extraPackages = prompt(extraPackages)
+    
+    # Install extra Packages with yay
+    cmd = 'yay -S ' + ' '.join(extraPackages.get("extraPackages"))
+    subprocess.run(cmd.split())
 
 #-------------------------------------------------------
 # Secondary logic - install by name
 #-------------------------------------------------------
 
+def installName():
+    print(Fore.RED + "Installing packages by name..." + Style.RESET_ALL)
+
+    # Make menu with InquirerPy where you can type in the package name
+    package_list = {
+        "type": "input",
+        "name": "package_list",
+        "message": "Type the name of the packages you want to install. Seperate them by a space. Confirm with <Enter>.",
+    }
+    package = prompt(package_list)
+
+    # Install a package with yay
+    cmd = 'yay -S ' + package.get("package_list")
+    subprocess.run(cmd.split())
+
 #-------------------------------------------------------
 # Secondary logic - configs
 #-------------------------------------------------------
+
+def configs():
+    print(Fore.RED + "Configuring programs & configs..." + Style.RESET_ALL)
+
+    # Make fish alias's
+    def fishAlias():
+        cmd = 'fish -c \'alias -s nf="cd && fish"\''
+        subprocess.run(cmd.split())
+
+        cmd = 'fish -c \'alias -s please="sudo"\''
+        subprocess.run(cmd.split())
+
+        cmd = 'fish -c \'alias -s q="qalc"\''
+        subprocess.run(cmd.split())
+
+        cmd = 'fish -c \'alias -s wa="brave --homepage https://www.wolframalpha.com/"\''
+        subprocess.run(cmd.split())
+
+        cmd = 'fish -c \'alias -s pm="sudo pacman -Syu"\''
+        subprocess.run(cmd.split())
+
+        cmd = 'fish -c \'alias -s start_qemu="sudo systemctl start libvirtd.service"\''
+        subprocess.run(cmd.split())
+
+        cmd = 'fish -c \'alias -s p="clear && ptpython"\''
+        subprocess.run(cmd.split())
+    fishAlias()
+
+    def pacmanConfig():
+        # Get the pacman config file and write it to variable
+        pacman_config = open('pacman.conf', 'w')
+        pacman_config_read = pacman_config.read
+        
+        # Seperate to config file by line
+        pacman_config_read = pacman_config_read.split('\n')
+
+        # Add 'color' to the end of the config file in a new line
+        pacman_config_read.append('Color')
+
+        # Ask with menu how many parallel downloads you want
+        parallel_downloads = {
+            "type": "input",
+            "name": "parallel_downloads",
+            "message": "How many parallel downloads do you want? (1-10...)"
+        }
+        parallel_downloads = prompt(parallel_downloads)
+        parallel_downloads = parallel_downloads.get("parallel_downloads")
+
+        # Search for 'parallelDownloads' 
+        for line in pacman_config_read:
+            if 'parallelDownloads' in line:
+                # Replace the line with the new one
+                pacman_config_read[pacman_config_read.index(line)] = 'parallelDownloads = ' + parallel_downloads
+        
+        # Make list to string
+        pacman_config_read = '\n'.join(pacman_config_read)
+
+        # Make string to utf-8
+        pacman_config_read = pacman_config_read.encode('utf-8')
+
+        # Write the new config file overwriting the old one
+        pacman_config.write(pacman_config_read)
+        pacman_config.close()
+    pacmanConfig()
+
 
 #-------------------------------------------------------
 # exectue Main logic

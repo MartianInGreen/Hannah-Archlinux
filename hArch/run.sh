@@ -17,4 +17,4 @@ echo "Installing dependencys!"
 sudo pacman -Syu git python python-pip
 pip install InquirerPy
 
-python3 hArch.py
+python3 hArchv2.py
