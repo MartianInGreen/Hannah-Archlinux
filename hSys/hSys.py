@@ -4,6 +4,9 @@
 # hSys - v0.0.1
 #-------------------------------------------------------
 
+import sys, os, subprocess, time, pwd, psutil
+from colorama import Fore, Back, Style
+
 #-------------------------------------------------------
 # Boot Logic
 #-------------------------------------------------------
@@ -45,13 +48,9 @@ boot()
 # Imports
 #-------------------------------------------------------
 
-from colorama import Fore, Back, Style
-
 from InquirerPy import prompt, inquirer
 from InquirerPy.base.control import Choice
 from InquirerPy.separator import Separator
-
-import sys, os, subprocess, time, pwd, psutil
 
 #-------------------------------------------------------
 # Basic stuff
@@ -388,6 +387,9 @@ def installClass():
     package_classes = prompt(package_classes)
     package_classes = package_classes.get("package_classes")
 
+    # print the package classes
+    print(Fore.RED + "Installing the following package classes: " + Fore.GREEN + package_classes + Style.RESET_ALL)
+
     # Same packe list as in hMaintain.py
     package_list = {
        "non-aur": {
@@ -404,7 +406,7 @@ def installClass():
             "basic": [''],
             "image": [''],
             "3d": [''],
-            "code": ['ptpython'],
+            "code": [''],
             "office": ['notion-app-enhanced'],
             "utils": ['brave-bin'],
             "video": [''],
@@ -428,7 +430,8 @@ def installExtra():
             "message": "Please select all extra packages you want to install. Navigate with <Up> <Down> and (de-)select with <Space>. Confirm with <Enter>.",
             "multiselect": True,
             "choices": [
-                Choice("spotify", enabled=True),
+                Choice("spotify", enabled=False),
+                Choice("whatsapp-nativefier", enabled=False),
                 Separator(),
                 Choice("Firefox", enabled=False),
                 Choice("chromium-bin", enabled=False),
@@ -444,6 +447,9 @@ def installExtra():
                 Choice("python-pip", enabled=False),
                 Choice("python-virtualenv", enabled=False),
                 Choice("python-tk", enabled=False),
+                Separator(),
+                Choice("zhs", enabled=False),
+                Choice("ptpython", enabled=False),
             ]
         }
     ]
