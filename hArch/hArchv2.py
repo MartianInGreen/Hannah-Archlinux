@@ -417,17 +417,28 @@ def setupGit():
     gpgKey()
 
     def gitConfig():
-        # Get the gpg key
-        cmd = 'cat ~/.gnupg/pubring.gpg'
-        gpg_key = subprocess.run(cmd.split(), stdout=subprocess.PIPE).stdout.decode('utf-8')
+        # Make a menu to ask if git config should be configured
+        configure_git_config = {
+            "type": "confirm",
+            "name": "configure_git_config",
+            "message": "Do you want to configure git config?",
+        }
+        configure_git_config = prompt(configure_git_config)
+        configure_git_config = configure_git_config.get("configure_git_config")
 
-        # Add gpg_key to the git config file
-        cmd = 'git config --global user.signingkey ' + gpg_key
-        subprocess.run(cmd.split())
+        if configure_git_config:
+            # Get the gpg key
+            cmd = 'cat ~/.gnupg/pubring.gpg'
+            gpg_key = subprocess.run(cmd.split(), stdout=subprocess.PIPE).stdout.decode('utf-8')
 
-        # Set gpgsign to true in the git config file
-        cmd = 'git config --global commit.gpgsign true'
-        subprocess.run(cmd.split())
+            # Add gpg_key to the git config file
+            cmd = 'git config --global user.signingkey ' + gpg_key
+            subprocess.run(cmd.split())
+
+            # Set gpgsign to true in the git config file
+            cmd = 'git config --global commit.gpgsign true'
+            subprocess.run(cmd.split())
+    gitConfig()
 
     print(Fore.YELLOW + "Please remember to mannually add the keys to your GitHub account!" + Style.RESET_ALL)
     print(Fore.GREEN + "Git setup complete!" + Style.RESET_ALL)
