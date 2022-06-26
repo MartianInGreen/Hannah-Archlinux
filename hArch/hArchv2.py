@@ -440,7 +440,7 @@ def setupGit():
             subprocess.run(cmd.split())
     gitConfig()
 
-    print(Fore.YELLOW + "Please remember to mannually add the keys to your GitHub account!" + Style.RESET_ALL)
+    print(Fore.YELLOW + "Please remember to mannually add the keys to your GitHub/GitLab account!" + Style.RESET_ALL)
     print(Fore.GREEN + "Git setup complete!" + Style.RESET_ALL)
 
 
