@@ -4,8 +4,9 @@
 # hSys - v0.0.1
 #-------------------------------------------------------
 
-import sys, os, subprocess, time, pwd, psutil
+import sys, os, subprocess, time, pwd
 from colorama import Fore, Back, Style
+import psutil
 
 #-------------------------------------------------------
 # Boot Logic
@@ -81,13 +82,13 @@ def __main__():
     checkForYay()
 
     while True:
-        mainMenu = mainMenu()
+        menu = mainMenu()
 
-        if mainMenu.choice == "Setup":
-            setupMenu = setupMenu()
+        if menu.get("main") == "Setup":
+            setup_menu = setupMenu()
 
             # implement all the choices
-            if setupMenu.choice == "all":
+            if setup_menu.get("setup") == "all":
                 installClass()
                 installExtra()
                 installName()
@@ -95,47 +96,47 @@ def __main__():
                 pacmanConfig()
                 setupGit()
                 createFolders()
-            elif setupMenu.choice == "install_class":
+            elif setup_menu.get("setup") == "install_class":
                 installClass()
-            elif setupMenu.choice == "install_extra":
+            elif setup_menu.get("setup") == "install_extra":
                 installExtra()
-            elif setupMenu.choice == "install_name":
+            elif setup_menu.get("setup") == "install_name":
                 installName()
-            elif setupMenu.choice == "setup_fish":
+            elif setup_menu.get("setup") == "setup_fish":
                 fishAlias()
-            elif setupMenu.choice == "setup_pacman":
+            elif setup_menu.get("setup") == "setup_pacman":
                 pacmanConfig()
-            elif setupMenu.choice == "setup_git":
+            elif setup_menu.get("setup") == "setup_git":
                 setupGit()
-            elif setupMenu.choice == "setup_foders":
+            elif setup_menu.get("setup") == "setup_foders":
                 createFolders()
-            elif setupMenu.choice == "Exit":
+            elif setup_menu.get("setup") == "Exit":
                 pass
 
-        elif mainMenu.choice == "Manage":
-            manageMenu = manageMenu()
+        elif menu.get("main") == "Manage":
+            manage_menu = manageMenu()
 
             # implement all the choices
-            if manageMenu.choice == "install_class":
+            if manage_menu.get("manage") == "install_class":
                 installClass()
-            elif manageMenu.choice == "install_extra":
+            elif manage_menu.get("manage") == "install_extra":
                 installExtra()
-            elif manageMenu.choice == "install_name":
+            elif manage_menu.get("manage") == "install_name":
                 installName()
-            elif manageMenu.choice == "update":
+            elif manage_menu.get("manage") == "update":
                 updateYayPackages()
-            elif manageMenu.choice == "upgrade":
+            elif manage_menu.get("manage") == "upgrade":
                 upgrade()
-            elif manageMenu.choice == "remove":
+            elif manage_menu.get("manage") == "remove":
                 removePackages()
-            elif manageMenu.choice == "search":
+            elif manage_menu.get("manage") == "search":
                 managePackages()
-            elif manageMenu.choice == "redo_setup_git":
+            elif manage_menu.get("manage") == "redo_setup_git":
                 setupGit()
-            elif manageMenu.choice == "Exit":
+            elif manage_menu.get("manage") == "Exit":
                 pass
 
-        elif mainMenu.choice == "Exit":
+        elif menu.get("main") == "Exit":
             goodbye()
         else:
             print(Fore.RED + "Invalid choice!" + Style.RESET_ALL)
@@ -154,15 +155,15 @@ def welcome():
 def mainMenu():
     # Make main menu with inquirer
     mainMenu = {
-        "type": "select",
+        "type": "list",
         "message": "What would you like to do?",
         "name": "main",
         "choices": [
-            Separator("Main Menu"),
+            Separator("Main Menu:"),
             Choice("Setup", "Setup your system"),
             Choice("Manage", "Manage your system"),
             Choice("Exit", "Exit hSys"),
-            Separator("Main Menu"),
+            Separator("--------------------"),
         ]
     }
     mainMenu = prompt(mainMenu)
@@ -172,11 +173,11 @@ def mainMenu():
 def setupMenu():
     # Make setup menu with inquirer
     setupMenu = {
-        "type": "select",
+        "type": "list",
         "message": "What would you like to do?",
         "name": "setup",
         "choices": [
-            Separator("Setup Menu"),
+            Separator("Setup Menu:"),
             Choice("install_class", "Install packages by package class"),
             Choice("install_extra", "Install extra packages"),
             Choice("install_name", "Install packages by name"),
@@ -186,7 +187,7 @@ def setupMenu():
             Choice("setup_foders", "Setup folders in /home/<user>"),
             Choice("All", "Run the setup for all of the above"),
             Choice("Exit", "Exit to main menu"),
-            Separator("Setup Menu"),
+            Separator("--------------------"),
         ]
     }
     setupMenu = prompt(setupMenu)
@@ -196,11 +197,11 @@ def setupMenu():
 def manageMenu():
     # Make manage menu with inquirer
     manageMenu = {
-        "type": "select",
+        "type": "list",
         "message": "What would you like to do?",
         "name": "manage",
         "choices": [
-            Separator("Manage Menu"),
+            Separator("Manage Menu:"),
             Choice("install_class", "Install packages by package class"),
             Choice("install_extra", "Install extra packages"),
             Choice("install_name", "Install packages by name"),
@@ -210,7 +211,7 @@ def manageMenu():
             Choice("search", "Search for installed packages"),
             Choice("redo_setup_git", "Redo git setup"),
             Choice("Exit", "Exit to main menu"),
-            Separator("Manage Menu"),
+            Separator("--------------------"),
         ]
     }
     manageMenu = prompt(manageMenu)
@@ -220,10 +221,10 @@ def manageMenu():
 def checkForSudo():
     # Check if the python script was run as sudo
     if os.geteuid() != 0:
-        print(Fore.RED + "This program needs to be run as sudo. Exiting..." + Style.RESET_ALL)
-        exit()
+        print(Fore.GREEN + "This program was not run as sudo - as it should. Continuing..." + Style.RESET_ALL)
     else:
-        print(Fore.GREEN + "This program was run as sudo. Continuing..." + Style.RESET_ALL)
+        print(Fore.RED + "Please do NOT run this program as sudo! This program will not work if you do!" + Style.RESET_ALL)
+        exit()
 
 def basicChecks():
     # Print system uptime in days
@@ -346,7 +347,7 @@ def installYay():
     
     print(Fore.RED + "Installing yay..." + Style.RESET_ALL)
     cmd = 'fish install-yay.fish'
-    subprocess.run(cmd.split())
+    subprocess.Popen(cmd.split())
 
 def installName():
     print(Fore.RED + "Installing packages by name..." + Style.RESET_ALL)
@@ -370,6 +371,7 @@ def installClass():
         {
             "type": "list",
             "message": "Please select all package classes you want to install. Navigate with <Up> <Down> and (de-)select with <Space>. Confirm with <Enter>.",
+            "name": "package_classes",
             "choices": [
                 Choice("basic", name="Basic: Essential utility's and library's", enabled=False),
                 Choice("image", name="Image: Image editing, manipulation, and drawing tools", enabled=False),
@@ -388,7 +390,7 @@ def installClass():
     package_classes = package_classes.get("package_classes")
 
     # print the package classes
-    print(Fore.RED + "Installing the following package classes: " + Fore.GREEN + package_classes + Style.RESET_ALL)
+    print(Fore.RED + "Installing the following package classes: " + Fore.GREEN + str(package_classes) + Style.RESET_ALL)
 
     # Same packe list as in hMaintain.py
     package_list = {
@@ -414,20 +416,25 @@ def installClass():
         }
         }
 
-    # Combine the package lists
-    package_list = {**package_list["non-aur"], **package_list["aur"]}
+    # combine the packages in package_list non-aur and aur for each sub category
+    package_list_combined = {}
+    for category in package_list["non-aur"]:
+        package_list_combined[category] = package_list["non-aur"][category] + package_list["aur"][category]
+    
+    # Install the packages
+    for category in package_list_combined:
+        if category in package_classes:
+            for package in package_list_combined[category]:
+                cmd = 'yay -S ' + package
+                subprocess.run(cmd.split())
 
-    # Loop through the package classes and install the packages
-    for package_class in package_classes:
-        for package in package_list[package_class]:
-            cmd = 'yay -S ' + package
-            subprocess.run(cmd.split())
 
 def installExtra():
     extraPackages = [
         {
             "type": "list",
             "message": "Please select all extra packages you want to install. Navigate with <Up> <Down> and (de-)select with <Space>. Confirm with <Enter>.",
+            "name": "extra_packages",
             "multiselect": True,
             "choices": [
                 Choice("spotify", enabled=False),
