@@ -23,7 +23,7 @@ def boot():
     print( "-----------------------------------------------------------------------------------------------" )
     print("\n\n\n\n")
 
-    time.sleep(5)
+    time.sleep(2)
 
     # check if git is installed
     if not os.path.exists("/usr/bin/git"):
@@ -680,6 +680,8 @@ def managePackages():
             print(Style.NORMAL + Fore.YELLOW + "->" + Fore.CYAN + Style.DIM + x + Style.RESET_ALL)
 
 def upgrade():
+    print(Fore.RED + "Upgrading..." + Style.RESET_ALL)
+    print(Fore.RED + Style.BRIGHT + "NOT YET IMPLEMENTED." + Style.RESET_ALL)
     pass
 
 #-------------------------------------------------------
