@@ -5,7 +5,6 @@
 #-------------------------------------------------------
 
 import sys, os, subprocess, time, pwd
-import psutil
 
 #-------------------------------------------------------
 # Boot Logic
@@ -37,14 +36,27 @@ def boot():
         print("Pip not installed! Installing pip...")
         cmd = 'sudo pacman -S python-pip'
         subprocess.run(cmd.split())
-    
-    # automatically install inquirer if not installed
-    cmd = 'pip install InquirerPy'
-    subprocess.run(cmd.split())
 
-    # automatically install colorama if not installed
-    cmd = 'pip install colorama'
-    subprocess.run(cmd.split())
+    # check if pip is installed
+    if not os.path.exists("/usr/bin/pip"):
+        # install pip
+        print("Pip not installed! Installing pip...")
+        cmd = 'sudo pacman -S python-pip'
+        subprocess.run(cmd.split())
+
+    # check if colorama is installed
+    if not os.path.exists("/usr/lib/python3.7/site-packages/colorama/__init__.py"):
+        # install colorama
+        print("Colorama not installed! Installing colorama...")
+        cmd = 'sudo pip install colorama'
+        subprocess.run(cmd.split())
+
+    # check if psutil is installed
+    if not os.path.exists("/usr/lib/python3.7/site-packages/psutil/__init__.py"):
+        # install psutil
+        print("Psutil not installed! Installing psutil...")
+        cmd = 'sudo pip install psutil'
+        subprocess.run(cmd.split())
 
 boot()
 
@@ -57,6 +69,8 @@ from InquirerPy.base.control import Choice
 from InquirerPy.separator import Separator
 
 from colorama import Fore, Back, Style
+
+import psutil
 
 #-------------------------------------------------------
 # Basic stuff
