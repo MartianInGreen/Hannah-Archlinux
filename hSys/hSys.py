@@ -37,11 +37,11 @@ def boot():
         cmd = 'sudo pacman -S python-pip'
         subprocess.run(cmd.split())
 
-    # check if pip is installed
-    if not os.path.exists("/usr/bin/pip"):
-        # install pip
-        print("Pip not installed! Installing pip...")
-        cmd = 'sudo pacman -S python-pip'
+    # check if inquirerPy library is installed
+    if not os.path.exists("/usr/lib/python3.7/site-packages/inquirerPy"):
+        # install inquirerPy
+        print("InquirerPy not installed! Installing inquirerPy...")
+        cmd = 'sudo pip install inquirerPy'
         subprocess.run(cmd.split())
 
     # check if colorama is installed
@@ -340,33 +340,6 @@ def installYay():
 
     # Run the commands
     subprocess.run(cmd.split())
-
-def installYay():
-    # Print a message that you should know how to manually install AUR packages before installing Yay
-    print(Fore.RED + "You should know how to manually install AUR packages before installing Yay." + Style.RESET_ALL)
-    print(Fore.RED + "If you don't know how to do that, please refer to the Arch wiki and only continue once you know how to do so!" + Style.RESET_ALL)
-    print(Fore.RED + "Always make sure the AUR packages you are installing come from a trusted source or review them yourself before installing them!" + Style.RESET_ALL)
-    print(Fore.RED + "Neither me nor the AUR team can be held responsible for any damage that may occur to your system!" + Style.RESET_ALL)
-
-    # Sleep for 2 seconds
-    time.sleep(2)
-
-    # Make a menu to confirm yay
-    yay_menu = {
-        "type": "confirm",
-        "message": "Do you want to install yay? You need yay to continue! (yay is a package manager for the AUR)",
-        "name": "yay"
-    }
-    yay_menu = prompt(yay_menu)
-    
-    # If yay is confirmed, install yay
-    if not yay_menu.get("yay"):
-        print(Fore.RED + "You did not confirm yay. Exiting..." + Style.RESET_ALL)
-        exit()
-    
-    print(Fore.RED + "Installing yay..." + Style.RESET_ALL)
-    cmd = 'fish install-yay.fish'
-    subprocess.Popen(cmd.split())
 
 def installName():
     print(Fore.RED + "Installing packages by name..." + Style.RESET_ALL)
