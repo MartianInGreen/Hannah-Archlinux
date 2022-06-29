@@ -1,11 +1,10 @@
 #-------------------------------------------------------
 # ©️ 2022 - Hannah Renners
 # Released under the GNU GENERAL PUBLIC LICENSE Version 3
-# hSys - v0.0.1
+# hSys - v0.0.2
 #-------------------------------------------------------
 
 import sys, os, subprocess, time, pwd
-from colorama import Fore, Back, Style
 import psutil
 
 #-------------------------------------------------------
@@ -28,19 +27,23 @@ def boot():
     # check if git is installed
     if not os.path.exists("/usr/bin/git"):
         # install git
-        print(Fore.RED + "Git not installed! Installing git...")
+        print("Git not installed! Installing git...")
         cmd = 'sudo pacman -S git'
         subprocess.run(cmd.split())
 
     # check if pip is installed with pacman
     if not os.path.exists("/usr/bin/pip"):
         # install pip
-        print(Fore.RED + "Pip not installed! Installing pip...")
+        print("Pip not installed! Installing pip...")
         cmd = 'sudo pacman -S python-pip'
         subprocess.run(cmd.split())
     
     # automatically install inquirer if not installed
     cmd = 'pip install InquirerPy'
+    subprocess.run(cmd.split())
+
+    # automatically install colorama if not installed
+    cmd = 'pip install colorama'
     subprocess.run(cmd.split())
 
 boot()
@@ -52,6 +55,8 @@ boot()
 from InquirerPy import prompt, inquirer
 from InquirerPy.base.control import Choice
 from InquirerPy.separator import Separator
+
+from colorama import Fore, Back, Style
 
 #-------------------------------------------------------
 # Basic stuff
