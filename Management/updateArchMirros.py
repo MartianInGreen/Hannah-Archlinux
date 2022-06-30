@@ -1,5 +1,6 @@
 from turtle import update
 import requests, os
+from InquirerPy import prompt
 
 def updateMirrors():
     # check if run as sudo
@@ -9,9 +10,46 @@ def updateMirrors():
 
     file = open('/etc/pacman.d/mirrorlist', 'w')
 
-    url = 'https://archlinux.org/mirrorlist/?country=DE&protocol=http&protocol=https&ip_version=4&ip_version=6'
+    url_all = 'https://archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4&ip_version=6'
+    url_de = 'https://archlinux.org/mirrorlist/?country=DE&protocol=http&protocol=https&ip_version=4&ip_version=6'
+    url_us = 'https://archlinux.org/mirrorlist/?country=US&protocol=http&protocol=https&ip_version=4&ip_version=6'
+    url_uk = 'https://archlinux.org/mirrorlist/?country=UK&protocol=http&protocol=https&ip_version=4&ip_version=6'
+    url_au = 'https://archlinux.org/mirrorlist/?country=AU&protocol=http&protocol=https&ip_version=4&ip_version=6'
+    url_ca = 'https://archlinux.org/mirrorlist/?country=CA&protocol=http&protocol=https&ip_version=4&ip_version=6'
+    url_nl = 'https://archlinux.org/mirrorlist/?country=NL&protocol=http&protocol=https&ip_version=4&ip_version=6'
 
-    r = requests.get(url)
+    # make menu for mirror selection
+    mirror_menu = {
+        "type": "list",
+        "message": "Select a mirror",
+        "name": "mirror",
+        "choices": [
+            "All",
+            "Germany",
+            "United States",
+            "United Kingdom",
+            "Australia",
+            "Canada",
+            "Netherlands"
+        ]
+    }
+    mirror_menu = prompt(mirror_menu)
+
+    # for each choise get the mirror list
+    if mirror_menu.get("mirror") == "All":
+        r = requests.get(url_all)
+    elif mirror_menu.get("mirror") == "Germany":
+        r = requests.get(url_de)
+    elif mirror_menu.get("mirror") == "United States":
+        r = requests.get(url_us)
+    elif mirror_menu.get("mirror") == "United Kingdom":
+        r = requests.get(url_uk)
+    elif mirror_menu.get("mirror") == "Australia":
+        r = requests.get(url_au)
+    elif mirror_menu.get("mirror") == "Canada":
+        r = requests.get(url_ca)
+    elif mirror_menu.get("mirror") == "Netherlands":
+        r = requests.get(url_nl)
 
     text = r.text
 
