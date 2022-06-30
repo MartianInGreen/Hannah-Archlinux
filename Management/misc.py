@@ -31,7 +31,7 @@ def main():
     # ask if git should be setup
     git = {
         "type": "confirm",
-        "message": "Would you like to setup git?",
+        "message": "Would you like to setup git? (Probalby not working)",
         "name": "git",
         "default": True,
     }
