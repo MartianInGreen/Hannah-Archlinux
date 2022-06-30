@@ -13,11 +13,15 @@ def updateMirrors():
     url_all = 'https://archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4&ip_version=6'
     url_de = 'https://archlinux.org/mirrorlist/?country=DE&protocol=http&protocol=https&ip_version=4&ip_version=6'
     url_us = 'https://archlinux.org/mirrorlist/?country=US&protocol=http&protocol=https&ip_version=4&ip_version=6'
-    url_uk = 'https://archlinux.org/mirrorlist/?country=UK&protocol=http&protocol=https&ip_version=4&ip_version=6'
+    url_uk = 'https://archlinux.org/mirrorlist/?country=GB&protocol=http&protocol=https&ip_version=4&ip_version=6'
     url_au = 'https://archlinux.org/mirrorlist/?country=AU&protocol=http&protocol=https&ip_version=4&ip_version=6'
     url_ca = 'https://archlinux.org/mirrorlist/?country=CA&protocol=http&protocol=https&ip_version=4&ip_version=6'
     url_nl = 'https://archlinux.org/mirrorlist/?country=NL&protocol=http&protocol=https&ip_version=4&ip_version=6'
     url_fr = 'https://archlinux.org/mirrorlist/?country=FR&protocol=http&protocol=https&ip_version=4&ip_version=6'
+    url_is = 'https://archlinux.org/mirrorlist/?country=IS&protocol=http&protocol=https&ip_version=4&ip_version=6'
+    url_nz = 'https://archlinux.org/mirrorlist/?country=NZ&protocol=http&protocol=https&ip_version=4&ip_version=6'
+    url_no = 'https://archlinux.org/mirrorlist/?country=NO&protocol=http&protocol=https&ip_version=4&ip_version=6'
+    url_in = 'https://archlinux.org/mirrorlist/?country=IN&protocol=http&protocol=https&ip_version=4&ip_version=6'
 
     # make menu for mirror selection
     mirror_menu = {
@@ -32,7 +36,11 @@ def updateMirrors():
             "Australia",
             "Canada",
             "Netherlands",
-            "France"
+            "France",
+            "Iceland",
+            "New Zealand",
+            "Norway",
+            "India"
         ]
     }
     mirror_menu = prompt(mirror_menu)
@@ -54,6 +62,14 @@ def updateMirrors():
         r = requests.get(url_nl)
     elif mirror_menu.get("mirror") == "France":
         r = requests.get(url_fr)
+    elif mirror_menu.get("mirror") == "Iceland":
+        r = requests.get(url_is)
+    elif mirror_menu.get("mirror") == "New Zealand":
+        r = requests.get(url_nz)
+    elif mirror_menu.get("mirror") == "Norway":
+        r = requests.get(url_no)
+    elif mirror_menu.get("mirror") == "India":
+        r = requests.get(url_in)
 
 
     text = r.text
