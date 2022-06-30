@@ -17,6 +17,7 @@ def updateMirrors():
     url_au = 'https://archlinux.org/mirrorlist/?country=AU&protocol=http&protocol=https&ip_version=4&ip_version=6'
     url_ca = 'https://archlinux.org/mirrorlist/?country=CA&protocol=http&protocol=https&ip_version=4&ip_version=6'
     url_nl = 'https://archlinux.org/mirrorlist/?country=NL&protocol=http&protocol=https&ip_version=4&ip_version=6'
+    url_fr = 'https://archlinux.org/mirrorlist/?country=FR&protocol=http&protocol=https&ip_version=4&ip_version=6'
 
     # make menu for mirror selection
     mirror_menu = {
@@ -30,7 +31,8 @@ def updateMirrors():
             "United Kingdom",
             "Australia",
             "Canada",
-            "Netherlands"
+            "Netherlands",
+            "France"
         ]
     }
     mirror_menu = prompt(mirror_menu)
@@ -50,6 +52,9 @@ def updateMirrors():
         r = requests.get(url_ca)
     elif mirror_menu.get("mirror") == "Netherlands":
         r = requests.get(url_nl)
+    elif mirror_menu.get("mirror") == "France":
+        r = requests.get(url_fr)
+
 
     text = r.text
 
