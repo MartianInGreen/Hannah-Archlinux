@@ -1,14 +1,8 @@
 from turtle import update
-import requests, os
+import requests, os, subprocess
 from InquirerPy import prompt
 
 def updateMirrors():
-    # check if run as sudo
-    if os.geteuid() != 0:
-        print("This program was not run as sudo - please run as sudo. Closing...")
-        exit()
-
-    file = open('/etc/pacman.d/mirrorlist', 'w')
 
     url_all = 'https://archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4&ip_version=6'
     url_de = 'https://archlinux.org/mirrorlist/?country=DE&protocol=http&protocol=https&ip_version=4&ip_version=6'
@@ -87,7 +81,34 @@ def updateMirrors():
     # add line to beginning of text
     text = '# Updated by Hannah\'s Arch-Scripts :>\n' + text
 
-    file.write(text)
+    # check if program was run as sudo
+    if os.geteuid() != 0:
+        # create temp python file
+        tmp = open('/tmp/mirrorlist.py', 'w')
+        cmd = 'sudo python /tmp/mirrorlist.py'
+
+        tmp_cmd_1 = 'import os'
+        tmp_cmd_2 = f"text = \'\\n\'.join({text_list})"
+        tmp_cmd_3 = '# Updated by Hannah\'s Arch-Scripts :>\n' + text
+        tmp_cmd_4 = 'file = open(\'/etc/pacman.d/mirrorlist\', \'w\')'
+        tmp_cmd_5 = 'file.write(text)'
+        tmp_cmd_6 = 'file.close()'
+
+        # join all commands into one string
+        tmp_cmd = tmp_cmd_1 + '\n' + tmp_cmd_2 + '\n' + tmp_cmd_3 + '\n' + tmp_cmd_4 + '\n' + tmp_cmd_5 + '\n' + tmp_cmd_6 + '\n'
+
+        tmp.write(tmp_cmd)
+        tmp.close()
+
+        # run temp python file
+        subprocess.run(cmd.split())
+
+        # delete temp python file
+        os.remove('/tmp/mirrorlist.py')
+    else:
+        file = open('/etc/pacman.d/mirrorlist', 'w')
+        file.write(text)
+        file.close()
 
     print("Mirrorlist updated!")
 
