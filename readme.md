@@ -13,9 +13,11 @@ These are my personal setup & management & help scripts and programs for Arch Li
 - Under additional repos select "multilib" (if you want to use 32bit programs. Also requiered by a looooot of games & steam)
 - Wait for Arch to finish installing
 - Git clone this repo
+
 ´´´
 git@github.com:MartianInGreen/Hannah-Archlinux.git
 ´´´
+
 - run the script in the following order if you want them
 
 ## 'setup.py'
