@@ -34,11 +34,9 @@ def checkForSudo():
         exit()
 
 def checkForYay():
-    # Check if yay is installed
-    try:
-        subprocess.check_output(["yay", "-h"])
-    except:
-        print(Fore.RED + "yay is not installed. Please install yay before using this program." + Style.RESET_ALL)
+    # Check if yay binar is installed
+    if not os.path.isfile("/usr/bin/yay"):
+        print(Fore.RED + "yay is not installed. Installing yay..." + Style.RESET_ALL)
         installYay()
 
 def getUser():
