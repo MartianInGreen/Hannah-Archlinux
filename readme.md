@@ -14,7 +14,7 @@ These are my personal setup & management & help scripts and programs for Arch Li
 - Wait for Arch to finish installing
 - Git clone this repo
 ```
-git@github.com:MartianInGreen/Hannah-Archlinux.git
+git clone git@github.com:MartianInGreen/Hannah-Archlinux.git
 ```
 - run the script in the following order if you want them
 
