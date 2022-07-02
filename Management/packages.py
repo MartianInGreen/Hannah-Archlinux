@@ -204,7 +204,7 @@ def installExtra():
     extraPackages = prompt(extraPackages)
     
     # Install extra Packages with yay
-    cmd = 'yay -S ' + ' '.join(extraPackages.get("extraPackages"))
+    cmd = 'yay -S' + ' '.join(extraPackages.get("extraPackages"))
     subprocess.run(cmd.split())
 
 main()

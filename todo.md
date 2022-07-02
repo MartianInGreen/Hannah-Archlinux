@@ -1,0 +1,3 @@
+- [ ] Fix yay install in 'packages.py'
+- [ ] Fix extra packages in 'packages.py'
+- [ ] Fix 'misc.py'
