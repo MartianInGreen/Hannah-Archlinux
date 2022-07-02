@@ -83,28 +83,15 @@ def updateMirrors():
 
     # check if program was run as sudo
     if os.geteuid() != 0:
-        # create temp python file
-        tmp = open('/tmp/mirrorlist.py', 'w')
-        cmd = 'sudo python /tmp/mirrorlist.py'
+        # write text to tmp text file
+        file = open('/tmp/mirrorlist', 'w')
+        file.write(text)
+        file.close()
 
-        tmp_cmd_1 = 'import os'
-        tmp_cmd_2 = f"text = \'\\n\'.join({text_list})"
-        tmp_cmd_3 = '# Updated by Hannah\'s Arch-Scripts :>\n' + text
-        tmp_cmd_4 = 'file = open(\'/etc/pacman.d/mirrorlist\', \'w\')'
-        tmp_cmd_5 = 'file.write(text)'
-        tmp_cmd_6 = 'file.close()'
-
-        # join all commands into one string
-        tmp_cmd = tmp_cmd_1 + '\n' + tmp_cmd_2 + '\n' + tmp_cmd_3 + '\n' + tmp_cmd_4 + '\n' + tmp_cmd_5 + '\n' + tmp_cmd_6 + '\n'
-
-        tmp.write(tmp_cmd)
-        tmp.close()
+        cmd = 'sudo python tmp_mirrorUpdate.py'
 
         # run temp python file
         subprocess.run(cmd.split())
-
-        # delete temp python file
-        os.remove('/tmp/mirrorlist.py')
     else:
         file = open('/etc/pacman.d/mirrorlist', 'w')
         file.write(text)
