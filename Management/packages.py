@@ -83,7 +83,7 @@ def installYay():
     cmd_5 = 'cd yay-git'
     cmd_6 = 'makepkg -si'
     
-    cmd = cmd_1 + ' && ' + cmd_2 + ' && ' + cmd_3 + ' && ' + cmd_4 + ' && ' + cmd_5 + ' && ' + cmd_6
+    cmd = "fish -c " + '\'' + cmd_1 + ' && ' + cmd_2 + ' && ' + cmd_3 + ' && ' + cmd_4 + ' && ' + cmd_5 + ' && ' + cmd_6 + '\''
 
     print(Fore.RED + "The yay Git repo will be cloned and then installed. This may take a while..." + Style.RESET_ALL)
 
