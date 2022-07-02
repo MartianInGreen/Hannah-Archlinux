@@ -74,18 +74,9 @@ def installYay():
 
     print(Fore.RED + "Installing yay..." + Style.RESET_ALL)
 
-    cmd_1 = 'set init_dir ' + getWorkingDir()
-    cmd_2 = 'cd /opt'
-    cmd_3 = 'sudo git clone https://aur.archlinux.org/yay-git.git'
-    cmd_4 = 'sudo chown -R $USER:$USER ./yay-git'
-    cmd_5 = 'cd yay-git'
-    cmd_6 = 'makepkg -si'
-    
-    cmd = "fish -c " + '\'' + cmd_1 + ' && ' + cmd_2 + ' && ' + cmd_3 + ' && ' + cmd_4 + ' && ' + cmd_5 + ' && ' + cmd_6 + '\''
-
     print(Fore.RED + "The yay Git repo will be cloned and then installed. This may take a while..." + Style.RESET_ALL)
 
-    time.sleep(2)
+    cmd = 'fish tmp_yay.fish'
 
     # Run the commands
     subprocess.run(cmd.split())
@@ -162,12 +153,9 @@ def installClass():
     for category in package_list["non-aur"]:
         package_list_combined[category] = package_list["non-aur"][category] + package_list["aur"][category]
     
-    # Install the packages
-    for category in package_list_combined:
-        if category in package_classes:
-            for package in package_list_combined[category]:
-                cmd = 'yay -S ' + package
-                subprocess.run(cmd.split())
+    # install all packages in package_list_combined
+    cmd = 'yay -S' + ' '.join(package_list_combined)
+    print(cmd)
 
 
 def installExtra():
@@ -203,8 +191,11 @@ def installExtra():
     ]
     extraPackages = prompt(extraPackages)
     
+    # put all extra packages in a list
+    extraPackages = extraPackages.get("extra_packages")
+
     # Install extra Packages with yay
-    cmd = 'yay -S' + ' '.join(extraPackages.get("extraPackages"))
+    cmd = 'yay -S' + ' '.join(extraPackages)
     subprocess.run(cmd.split())
 
 main()
