@@ -155,7 +155,7 @@ def installClass():
     
     # install all packages in package_list_combined
     cmd = 'yay -S' + ' '.join(package_list_combined)
-    print(cmd)
+    subprocess.run(cmd.split())
 
 
 def installExtra():
